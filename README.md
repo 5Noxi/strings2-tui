@@ -1,15 +1,96 @@
-# strings2 - Extract strings from binary files and process memory
+# String Extraction & Display COFF Information
+
+`strings.exe` extracts strings from binary data. You can turn on the `Filter Strings` option, which removes parts like:
+```
+Φü¬;µò┤τÄï
+ΦüèkΦü₧k
+φÿÇ?φÿò?
+φÿÇ+φÿö+
+Ω│╜T∩╝│∩╜ü
+Ω╖£∩╛Äδºî\
+Ω╡┤aΩ╖╣a
+Ω┤Ç:Ω╕╕:δéî
+```
+You're also able to enter the minimum string length (number of characters), which can improve the overview, by removing parts like:
+```
+Fxt
+F:H
+-fy
+fyl
+fy-
+fZ~
+FzG
+```
+You should not set it too high, as this will otherwise remove lines that you may want. Default is set to `4`.
+
+`Recurse` - `ON` means that it'll process all subdirectories, e.g. `C:\Windows\System32\DriverStore`. If it's set to `OFF`, subdirectories won’t be processed and only files located in `C:\Windows\System32\` will be processed.
+
+`dumpbin.exe` displays information about Common Object File Format (COFF) binary files. The `Preconfigured Flags` list has the following meaning:
+
+__If set to `OFF`, it uses these flags:__
+`/HEADERS` - File headers (COFF + PE headers)
+`/ARCHIVEMEMBERS` - For .lib files, list contents
+`/EXPORTS` -Exported functions/symbols
+`/IMPORTS` - Imported functions and DLLs
+`/SYMBOLS` - Symbol table (COFF debug info)
+`/LINENUMBERS` - Line numbers (if available)
+`/RAWDATA` - Raw section data
+`/RELOCATIONS` - Base relocations
+`/TLS` - TLS directory (Thread-Local Storage)
+`/SUMMARY` - Section sizes and usage
+`/CLRHEADER` - .NET managed code header (if present)
+`/LOADCONFIG` - Load configuration directory
+`/DIRECTIVES` - Linker directives
+`/PDATA` - Exception data (used for SEH)
+`/DEBUGDIRECTORIES` - Debug-related directories
+`/FPO` - Frame pointer omission data
+`/PDBPATH` - Embedded PDB path (debug info)
+-# Info was taken from [DUMPBIN options](https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170)
+
+__If set to `ON`, it uses these flags, which reduce the size by a lot:__
+`/ARCHIVEMEMBERS`
+`/CLRHEADER`
+`/DEPENDENTS`
+`/EXPORTS`
+`/IMPORTS`
+`/SUMMARY`
+`/SYMBOLS`
+`/DIRECTIVES`
+
+`One File` option writes all strings into one file, instead of creating a new file for each. It uses the `-f` flag, which shows the filename for the string, e.g.:
+```cmd
+C:\Windows\System32/ntoskrnl.exe,ReservedCpuSets
+```
+`P` lets you set a process ID (PID) - this will only work while `One File` is turned off.
+
+__Additional information:__
+- Turning off `Preconfigured Dumpbin Flags` increases the execution time by a lot - should only be changed if single files are extracted
+- It is recommended to use `One File`, as it speeds up the process and it'll be easier to search for strings
+- String length size should stay at `3-5`
+
+It is recommended to use the default preset and let it run once, which will extract your whole `System32` folder. Afterwards you can use this file to check for the existence of any string (doesn't mean that it's a DWORD). Use WPR or IDA for it (e.g. <#1371224441568231516>). This tool should be used to search the binary file for a specific string or to check whether a string exists anywhere.
+
+__References:__
+> https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170
+> https://learn.microsoft.com/en-us/sysinternals/downloads/strings
+> https://visualstudio.microsoft.com/ (`mspdbcore.dll`, `tbbmalloc.dll`, `link.exe`, `dumpbin.exe`)
+> https://github.com/5Noxi/strings2 (`strings.exe`)
+> https://github.com/glmcdona/binary2strings (python module version)
+
+
+# Strings2 CL Information
+
 Strings2 is a Windows command-line tool for extracting strings from binary data. On top of the classic Sysinternals strings approach, this tool includes:
-* Multi-lingual string extraction, such as Russian, Chinese, etc.
-* Machine learning model filters out junk erroneous string extractions to reduce noise.
-* String extractions from process memory.
-* Recursive and wildcard filename matching.
-* Json output option for automation integration. (Also see python module version [binary2strings](https://github.com/glmcdona/binary2strings))
+- Multi-lingual string extraction, such as Russian, Chinese, etc.
+- Machine learning model filters out junk erroneous string extractions to reduce noise.
+- String extractions from process memory.
+- Recursive and wildcard filename matching.
+- Json output option for automation integration. (Also see python module version [binary2strings](https://github.com/glmcdona/binary2strings))
 
 I also recommend looking at [FLOSS](https://github.com/mandiant/flare-floss) from Mandiant a cross-platform string extraction solver with a different set of features.
 
 ## Installation
-Download the [latest release binary](https://github.com/glmcdona/strings2/releases).
+Download the [latest release binary](https://github.com/5Noxi/strings2/releases).
 
 ## Example Usage
 
@@ -49,29 +130,3 @@ Extract strings from `malware.exe` to a json file:
 |-pid [pid]|The strings from the process address space for the specified PID will be dumped. Use a '0x' prefix to specify a hex PID.|
 |-system|Dumps strings from all accessible processes on the system. This takes awhile.|
 |-json|Writes output as json. Many flags are ignored in this mode.|
-
-
-## Version History
-
-Version 2.0 (May 29, 2022)
-  - Complete overhaul of the tool.
-  -	Upgrade string extraction engine from [binary2strings](https://github.com/glmcdona/binary2strings).
-  - Add support for multilingual strings.
-  - Added ML model to filter junk erroneous string extractions.
-  - Add option to dump only a specified offset range.
-  - Add json output option.
-  - Add memory address and module name logging.
-  - Fixes to 64bit process string dumping.
-
-Version 1.2 (Apr 21, 2013)
-  -   Added "-a" and "-u" flags to extract only ascii or unicode strings.
-  -   Fixed a bug when processing certain filenames.
-
-Version 1.1 (Nov 22, 2012)
-  -   Added "-r" recursive flag option.
-  -   Added "-pid" and "-system" flag options to specify process input sources.
-  -   Piped input data is now supported.
-  -   Various fixes.
-
-Version 1.0 (Sept 20, 2012)
-  -   Initial release.
