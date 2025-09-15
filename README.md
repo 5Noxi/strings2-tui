@@ -1,74 +1,22 @@
 # String Extraction & Display COFF Information
 
-`strings.exe` extracts strings from binary data. You can turn on the `Filter Strings` option, which removes parts like:
-```
-Φü¬;µò┤τÄï
-ΦüèkΦü₧k
-φÿÇ?φÿò?
-φÿÇ+φÿö+
-Ω│╜T∩╝│∩╜ü
-Ω╖£∩╛Äδºî\
-Ω╡┤aΩ╖╣a
-Ω┤Ç:Ω╕╕:δéî
-```
-You're also able to enter the minimum string length (number of characters), which can improve the overview, by removing parts like:
-```
-Fxt
-F:H
--fy
-fyl
-fy-
-fZ~
-FzG
-```
-You should not set it too high, as this will otherwise remove lines that you may want. Default is set to `4`.
+It is recommended to use the default preset and let it run once, which will extract your whole `System32` folder. Afterwards you can use this file to check for the existence of any string (doesn't mean that it's a DWORD). Use WPR or IDA for it (e.g. [wpr-reg-records](https://github.com/5Noxi/wpr-reg-records#records-table)). This tool should be used to search the binary file for a specific string or to check whether a string exists anywhere.
 
-`Recurse` - `ON` means that it'll process all subdirectories, e.g. `C:\Windows\System32\DriverStore`. If it's set to `OFF`, subdirectories won’t be processed and only files located in `C:\Windows\System32\` will be processed.
-
-`dumpbin.exe` displays information about Common Object File Format (COFF) binary files. The `Preconfigured Flags` list has the following meaning:
-
-__If set to `OFF`, it uses these flags:__
-`/HEADERS` - File headers (COFF + PE headers)
-`/ARCHIVEMEMBERS` - For .lib files, list contents
-`/EXPORTS` -Exported functions/symbols
-`/IMPORTS` - Imported functions and DLLs
-`/SYMBOLS` - Symbol table (COFF debug info)
-`/LINENUMBERS` - Line numbers (if available)
-`/RAWDATA` - Raw section data
-`/RELOCATIONS` - Base relocations
-`/TLS` - TLS directory (Thread-Local Storage)
-`/SUMMARY` - Section sizes and usage
-`/CLRHEADER` - .NET managed code header (if present)
-`/LOADCONFIG` - Load configuration directory
-`/DIRECTIVES` - Linker directives
-`/PDATA` - Exception data (used for SEH)
-`/DEBUGDIRECTORIES` - Debug-related directories
-`/FPO` - Frame pointer omission data
-`/PDBPATH` - Embedded PDB path (debug info)
--# Info was taken from [DUMPBIN options](https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170)
-
-__If set to `ON`, it uses these flags, which reduce the size by a lot:__
-`/ARCHIVEMEMBERS`
-`/CLRHEADER`
-`/DEPENDENTS`
-`/EXPORTS`
-`/IMPORTS`
-`/SUMMARY`
-`/SYMBOLS`
-`/DIRECTIVES`
-
-`One File` option writes all strings into one file, instead of creating a new file for each. It uses the `-f` flag, which shows the filename for the string, e.g.:
-```cmd
-C:\Windows\System32/ntoskrnl.exe,ReservedCpuSets
-```
-`P` lets you set a process ID (PID) - this will only work while `One File` is turned off.
+| **Option**            | **Description** |
+|-----------------------|-----------------|
+| `Filter Strings`      | Removes unreadable characters or random sequences like `Φü¬;µò┤τÄï`, `φÿÇ+φÿö+`, `Ω│╜T∩╝│∩╜ü`. Helps clean up output for better readability. |
+| `Min String Length`   | Sets the minimum number of characters a string must have to be included (default `4`).<br>Prevents clutter by filtering out very short strings like `Fxt`, `fyl`, `fy-`. Avoid setting too high, or you may miss relevant data. |
+| `Recurse`             | **ON:** Processes all subdirectories (e.g., scans `C:\Windows\System32\DriverStore` and all its folders).<br>**OFF:** Processes **only** files directly in the selected folder (e.g., just `C:\Windows\System32\`). |
+| `dumpbin.exe`         | Displays detailed information about Common Object File Format (COFF) binaries such as DLL, EXE, and LIB files. |
+| `Preconfigured Flags` | **OFF:** Uses all detailed flags:<br>`/HEADERS`, `/ARCHIVEMEMBERS`, `/EXPORTS`, `/IMPORTS`, `/SYMBOLS`, `/LINENUMBERS`, `/RAWDATA`, `/RELOCATIONS`, `/TLS`, `/SUMMARY`, `/CLRHEADER`, `/LOADCONFIG`, `/DIRECTIVES`, `/PDATA`, `/DEBUGDIRECTORIES`, `/FPO`, `/PDBPATH`.<br><br>**ON:** Uses a minimal set of flags to reduce size:<br>`/ARCHIVEMEMBERS`, `/CLRHEADER`, `/DEPENDENTS`, `/EXPORTS`, `/IMPORTS`, `/SUMMARY`, `/SYMBOLS`, `/DIRECTIVES`.<br><br>Full reference: [DUMPBIN options](https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170) |
+| `One File`            | Combines all strings into a single file rather than creating a separate file for each input file.<br>Uses the `-f` flag to include the filename with the string, e.g.:<br>`C:\Windows\System32/ntoskrnl.exe,ReservedCpuSets` |
+| `P`                   | Sets a specific process ID (PID) for analysis.<br>**Note:** Works **only** when `One File` is turned **OFF**. |
 
 __Additional information:__
 - Turning off `Preconfigured Dumpbin Flags` increases the execution time by a lot - should only be changed if single files are extracted
 - It is recommended to use `One File`, as it speeds up the process and it'll be easier to search for strings
+- `dumpbin.exe` displays information about COFF binary files like DLLs, EXEs, and LIBs
 - String length size should stay at `3-5`
-
-It is recommended to use the default preset and let it run once, which will extract your whole `System32` folder. Afterwards you can use this file to check for the existence of any string (doesn't mean that it's a DWORD). Use WPR or IDA for it (e.g. <#1371224441568231516>). This tool should be used to search the binary file for a specific string or to check whether a string exists anywhere.
 
 __References:__
 > https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170
@@ -96,22 +44,31 @@ Download the [latest release binary](https://github.com/5Noxi/strings2/releases)
 
 Dump all strings from `malware.exe` to stdout:
 
-* ```strings2 malware.exe```
+```
+strings2 malware.exe
+```
 
 Dump all strings from all `.exe` files in the `files` folder to the file `strings.txt`:
-* ```strings2 ./files/*.exe > strings.txt```
+```
+strings2 ./files/*.exe > strings.txt
+```
 
 Dump strings from a specific process id, including logging the module name and memory addresses of each match:
-* ```strings2 -f -s -pid 0x1a3 > process_strings.txt```
+```
+strings2 -f -s -pid 0x1a3 > process_strings.txt
+```
 
 Extract strings from `malware.exe` to a json file:
-* ```strings2 malware.exe -json > strings.json```
+```
+strings2 malware.exe -json > strings.json
+```
 
 ## Documentation
 
-```strings.exe (options) file_pattern```
-
-* `file_pattern` can be a folder or file. Wildcards (`*`) are supported in the filename parts - eg `.\files\*.exe`.
+```
+strings.exe (options) file_pattern
+```
+`file_pattern` can be a folder or file. Wildcards (`*`) are supported in the filename parts - eg `.\files\*.exe`.
 
 |Option|Description|
 |--|--|
