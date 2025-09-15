@@ -19,12 +19,9 @@ __Additional information:__
 - String length size should stay at `3-5`
 
 __References:__
-> https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170
-> https://learn.microsoft.com/en-us/sysinternals/downloads/strings
-> https://visualstudio.microsoft.com/ (`mspdbcore.dll`, `tbbmalloc.dll`, `link.exe`, `dumpbin.exe`)
-> https://github.com/5Noxi/strings2 (`strings.exe`)
-> https://github.com/glmcdona/binary2strings (python module version)
-
+> https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170  
+> https://learn.microsoft.com/en-us/sysinternals/downloads/strings  
+> https://visualstudio.microsoft.com/ (`mspdbcore.dll`, `tbbmalloc.dll`, `link.exe`, `dumpbin.exe`)  
 
 # Strings2 CL Information
 
