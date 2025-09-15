@@ -2,6 +2,12 @@
 
 It is recommended to use the default preset and let it run once, which will extract your whole `System32` folder. Afterwards you can use this file to check for the existence of any string (doesn't mean that it's a DWORD). Use WPR or IDA for it (e.g. [wpr-reg-records](https://github.com/5Noxi/wpr-reg-records#records-table)). This tool should be used to search the binary file for a specific string or to check whether a string exists anywhere.
 
+Preview:
+
+https://github.com/user-attachments/assets/659eba08-da10-411a-94e4-c3cb4b8ece73
+
+## TUI Options
+
 | **Option**            | **Description** |
 |-----------------------|-----------------|
 | `Filter Strings`      | Removes unreadable characters or random sequences like `Φü¬;µò┤τÄï`, `φÿÇ+φÿö+`, `Ω│╜T∩╝│∩╜ü`. Helps clean up output for better readability. |
@@ -12,16 +18,11 @@ It is recommended to use the default preset and let it run once, which will extr
 | `One File`            | Combines all strings into a single file rather than creating a separate file for each input file.<br>Uses the `-f` flag to include the filename with the string, e.g.:<br>`C:\Windows\System32/ntoskrnl.exe,ReservedCpuSets` |
 | `P`                   | Sets a specific process ID (PID) for analysis.<br>**Note:** Works **only** when `One File` is turned **OFF**. |
 
-__Additional information:__
+## Additional Information
 - Turning off `Preconfigured Dumpbin Flags` increases the execution time by a lot - should only be changed if single files are extracted
 - It is recommended to use `One File`, as it speeds up the process and it'll be easier to search for strings
 - `dumpbin.exe` displays information about COFF binary files like DLLs, EXEs, and LIBs
 - String length size should stay at `3-5`
-
-__References:__
-> https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170  
-> https://learn.microsoft.com/en-us/sysinternals/downloads/strings  
-> https://visualstudio.microsoft.com/ (`mspdbcore.dll`, `tbbmalloc.dll`, `link.exe`, `dumpbin.exe`)  
 
 # Strings2 CL Information
 
@@ -84,3 +85,8 @@ strings.exe (options) file_pattern
 |-pid [pid]|The strings from the process address space for the specified PID will be dumped. Use a '0x' prefix to specify a hex PID.|
 |-system|Dumps strings from all accessible processes on the system. This takes awhile.|
 |-json|Writes output as json. Many flags are ignored in this mode.|
+
+## References
+> https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170  
+> https://learn.microsoft.com/en-us/sysinternals/downloads/strings  
+> https://visualstudio.microsoft.com/ (`mspdbcore.dll`, `tbbmalloc.dll`, `link.exe`, `dumpbin.exe`)  
