@@ -24,6 +24,10 @@ https://github.com/user-attachments/assets/659eba08-da10-411a-94e4-c3cb4b8ece73
 - `dumpbin.exe` displays information about COFF binary files like DLLs, EXEs, and LIBs
 - String length size should stay at `3-5`
 
+## Installation
+- [CL Tool | glmcdona](https://github.com/5Noxi/strings2/releases)
+- [TUI PS | Nohuxi](https://github.com/5Noxi/strings2-tui/blob/master/StringExt.ps1)
+
 # Strings2 CL Information
 
 Strings2 is a Windows command-line tool for extracting strings from binary data. On top of the classic Sysinternals strings approach, this tool includes:
@@ -34,9 +38,6 @@ Strings2 is a Windows command-line tool for extracting strings from binary data.
 - Json output option for automation integration. (Also see python module version [binary2strings](https://github.com/glmcdona/binary2strings))
 
 I also recommend looking at [FLOSS](https://github.com/mandiant/flare-floss) from Mandiant a cross-platform string extraction solver with a different set of features.
-
-## Installation
-Download the [latest release binary](https://github.com/5Noxi/strings2/releases).
 
 ## Example Usage
 
