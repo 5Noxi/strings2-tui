@@ -10,10 +10,10 @@ https://github.com/user-attachments/assets/659eba08-da10-411a-94e4-c3cb4b8ece73
 
 | **Option**            | **Description** |
 |-----------------------|-----------------|
-| `Filter Strings`      | Removes unreadable characters or random sequences like `Φü¬;µò┤τÄï`, `φÿÇ+φÿö+`, `Ω│╜T∩╝│∩╜ü`. Helps clean up output for better readability. |
+| `Filter Strings`      | Removes unreadable characters or random sequences like `Φü¬;µò┤τÄï`, `φÿÇ+φÿö+`, `Ω│╜T∩╝│∩╜ü`. |
 | `Min String Length`   | Sets the minimum number of characters a string must have to be included (default `4`).<br>Prevents clutter by filtering out very short strings like `Fxt`, `fyl`, `fy-`. Avoid setting too high, or you may miss relevant data. |
 | `Recurse`             | **ON:** Processes all subdirectories (e.g., scans `C:\Windows\System32\DriverStore` and all its folders).<br>**OFF:** Processes **only** files directly in the selected folder (e.g., just `C:\Windows\System32\`). |
-| `dumpbin.exe`         | Displays detailed information about Common Object File Format (COFF) binaries such as DLL, EXE, and LIB files. |
+| `dumpbin.exe`         | Displays detailed information about COFF binaries such as DLL, EXE, and LIB files. |
 | `Preconfigured Flags` | **OFF:** Uses all detailed flags:<br>`/HEADERS`, `/ARCHIVEMEMBERS`, `/EXPORTS`, `/IMPORTS`, `/SYMBOLS`, `/LINENUMBERS`, `/RAWDATA`, `/RELOCATIONS`, `/TLS`, `/SUMMARY`, `/CLRHEADER`, `/LOADCONFIG`, `/DIRECTIVES`, `/PDATA`, `/DEBUGDIRECTORIES`, `/FPO`, `/PDBPATH`.<br><br>**ON:** Uses a minimal set of flags to reduce size:<br>`/ARCHIVEMEMBERS`, `/CLRHEADER`, `/DEPENDENTS`, `/EXPORTS`, `/IMPORTS`, `/SUMMARY`, `/SYMBOLS`, `/DIRECTIVES`.<br><br>Full reference: [DUMPBIN options](https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-options?view=msvc-170) |
 | `One File`            | Combines all strings into a single file rather than creating a separate file for each input file.<br>Uses the `-f` flag to include the filename with the string, e.g.:<br>`C:\Windows\System32/ntoskrnl.exe,ReservedCpuSets` |
 | `P`                   | Sets a specific process ID (PID) for analysis.<br>**Note:** Works **only** when `One File` is turned **OFF**. |
