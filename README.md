@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/659eba08-da10-411a-94e4-c3cb4b8ece73
 
 ## Installation
 - [CL Tool | glmcdona](https://github.com/5Noxi/strings2/releases)
-- [TUI PS | Nohuxi](https://github.com/5Noxi/strings2-tui/blob/master/StringExt.ps1)
+- [PS TUI | Nohuxi](https://github.com/5Noxi/strings2-tui/blob/master/StringExt.ps1)
 
 # Strings2 CL Information
 
